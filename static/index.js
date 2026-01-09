@@ -1,4 +1,3 @@
-const NGROK_URL = "{{ NGROK_URL }}";
 const address = 'http://localhost:5000/generate';
 const clearBtn = document.getElementById("clearBtn");
 const inputBar = document.getElementById("InputUrl");
@@ -72,14 +71,23 @@ function listenContent(){
     }
 }
 
-function shareContent(){
+async function shareContent(){
     const resultText = result.textContent.trim();
     if(!resultText){
         alert("No content!")
         return;
     }
 
-    const shareUrl = `https://${window.NGROK_URL}/share?text=${encodeURIComponent(resultText)}`;
-    const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
-    window.open(linkedInUrl, "_blank", "width=600,height=400");
+    try{
+        await navigator.clipboard.writeText(resultText);
+
+
+        alert('Post content copied to your clipboard. You will be redirected to LinkedIn!');
+
+        const linkedinURL = `https://www.linkedin.com/feed/?shareActive=true`;
+        window.open(linkedinURL, "_blank");
+
+    } catch(error) {
+        console.error('Failed to copy content: ', error);
+    }
 }
