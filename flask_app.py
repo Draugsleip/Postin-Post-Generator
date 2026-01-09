@@ -68,11 +68,6 @@ def process_url():
             "status": "error",
             "details": str(e)
         })
-        
-@app.route("/share")
-def share():
-    content = request.args.get("text")
-    return render_template("share.html", summary=content)
     
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
