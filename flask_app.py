@@ -8,7 +8,6 @@ from langchain.agents import create_agent
 load_dotenv()
 
 API_KEY = os.getenv("OPENAI_API_KEY")
-NGROK_URL=os.getenv("NGROK_URL")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
@@ -18,7 +17,7 @@ app = Flask(__name__, template_folder=TEMPLATE_DIR,static_folder=STATIC_DIR)
 
 @app.route("/")
 def index():
-    return render_template('index.html', NGROK_URL=NGROK_URL)
+    return render_template('index.html')
 
 @app.route("/generate", methods=["POST"])
 def process_url():
