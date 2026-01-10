@@ -1,10 +1,11 @@
-const address = 'http://localhost:5000/generate';
+const base_address = 'http://localhost:5000';
 const clearBtn = document.getElementById("clearBtn");
 const inputBar = document.getElementById("InputUrl");
 const generatorBtn = document.getElementById("gnrBtn");
 const resultBox = document.getElementById("resultBox");
 const shareBtn = document.getElementById("shareBtn");
 const result = document.getElementById("result");
+const randomizeBtn = document.getElementById("randomizeBtn");
 
 async function processUrl(){
     const inputUrl = document.getElementById("InputUrl").value.trim();
@@ -20,7 +21,7 @@ async function processUrl(){
         return;
     }
     try{
-        const response = await fetch(`${address}`, {
+        const response = await fetch(`${base_address}/generate`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ url: inputUrl })
@@ -89,5 +90,35 @@ async function shareContent(){
 
     } catch(error) {
         console.error('Failed to copy content: ', error);
+    }
+}
+
+async function generateRandom(){
+
+    randomizeBtn.disabled = true;
+    randomizeBtn.innerHTML = `Generating... <span class="spinner-border text-primary spinner-border-sm" role="status" aria-hidden="true"></span>`;
+
+    // reset previous results
+    result.textContent = "";
+
+    try{
+        const response = await fetch(`${base_address}/generate_random`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+        });
+
+        if(response.ok === false){
+            throw new Error('Something is wrong with response!')
+        }
+
+        const data = await response.json();
+        result.textContent = data.summary.replace(/<br>/g, '\n');
+    } catch(error){
+        console.error("Error:", error);
+        result.textContent= "Something went wrong!";
+    } finally {
+        randomizeBtn.disabled = false;
+        randomizeBtn.innerHTML = "Trending Now";
+        resultBox.style.display = "block";
     }
 }
