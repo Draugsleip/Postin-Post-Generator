@@ -15,6 +15,8 @@ async function processUrl(){
 
     // reset previous results
     result.textContent = "";
+    resultBox.style.display = "none";
+
 
     if(!inputUrl){
         showError('Please Enter a URL!')
@@ -100,6 +102,7 @@ async function generateRandom(){
 
     // reset previous results
     result.textContent = "";
+    resultBox.style.display = "none";
 
     try{
         const response = await fetch(`${base_address}/generate_random`, {
