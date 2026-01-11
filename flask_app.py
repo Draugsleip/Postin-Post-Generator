@@ -6,6 +6,7 @@ import trafilatura
 from langchain.agents import create_agent
 import datetime
 import random
+import logging
 
 load_dotenv()
 
@@ -70,9 +71,10 @@ def process_url():
             "status": "success"
         })
     except Exception as e:
+        logging.exception("Unhandled exception while processing /generate")
         return jsonify({
             "status": "error",
-            "details": str(e)
+            "details": "An internal error has occurred while processing the request."
         })
 
 @app.route("/generate_random", methods=["POST"])
@@ -101,11 +103,12 @@ def generate_random():
         return jsonify({
             "summary": post_text,
             "status": "success"
+        logging.exception("Unhandled exception while processing /generate_random")
         })
     except Exception as e:
         return jsonify({
             "status": "error",
-            "details": str(e)
+            "details": "An internal error has occurred while generating the post."
         })
 
 def get_trending_topics():
