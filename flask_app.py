@@ -102,7 +102,7 @@ def generate_random():
 
         return jsonify({
             "summary": post_text,
-            "status": "success"
+            "status": "success",
         logging.exception("Unhandled exception while processing /generate_random")
         })
     except Exception as e:
