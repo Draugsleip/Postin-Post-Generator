@@ -1,4 +1,3 @@
-const base_address = 'http://localhost:5000';
 const clearBtn = document.getElementById("clearBtn");
 const inputBar = document.getElementById("InputUrl");
 const generatorBtn = document.getElementById("gnrBtn");
@@ -23,7 +22,7 @@ async function processUrl(){
         return;
     }
     try{
-        const response = await fetch(`${base_address}/generate`, {
+        const response = await fetch(`/generate`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ url: inputUrl })
@@ -105,7 +104,7 @@ async function generateRandom(){
     resultBox.style.display = "none";
 
     try{
-        const response = await fetch(`${base_address}/generate_random`, {
+        const response = await fetch(`/generate_random`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
         });
