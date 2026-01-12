@@ -1,7 +1,6 @@
 old_headers.json
 .venv/
 .env
-ngrok.yml
 .idea/
 __pycache__/
 *.pyc

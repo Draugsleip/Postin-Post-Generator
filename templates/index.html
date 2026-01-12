@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en" data-bs-theme="dark">
     <head>
-        <title>Postin-Post Generator</title>
+        <title>Postin-Post-Generator</title>
         <meta charset="utf-8" />
         <meta
             name="viewport"
@@ -30,11 +30,11 @@
                 </div>
         
                 <button id="gnrBtn" class="btn btn-light mt-2 mb-2 me-4" onclick="processUrl()" type="button" style="font-weight: 500;">Generate Post</button>
-                <button class="btn btn-light mt-2 mb-2 mw-4" onclick="" type="button" style="font-weight: 500;">I'm Feeling Lucky</button>
+                <button id="randomizeBtn" class="btn btn-light mt-2 mb-2 mw-4" onclick="generateRandom()" type="button" style="font-weight: 500;">Trending Now</button>
 
                 <div id="resultBox" class="mb-4 mt-4" style="display: none;" >
                     <textarea class="form-control" rows="25" id="result" style="white-space: pre-line; resize: none;"></textarea>
-                    <button id="shareBtn" class="btn btn-primary mt-4 me-4" onclick="shareContent()" style="font-weight: 500; font-size: 1.1rem;">Post
+                    <button id="shareBtn" onclick="shareContent()" class="btn btn-primary mt-4 me-4" style="font-weight: 500; font-size: 1.1rem;">Post
                         <i class="bi bi-linkedin"></i>
                     </button>
                     <button class="btn btn-light mt-4 mw-4" onclick="listenContent()" style="font-weight: 500;">
@@ -57,9 +57,6 @@
             integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
             crossorigin="anonymous"
         ></script>
-        <script>
-            window.NGROK_URL="{{ NGROK_URL }}";
-        </script>
     <script src="{{ url_for('static', filename='index.js') }}"></script>
     </body>
 </html>

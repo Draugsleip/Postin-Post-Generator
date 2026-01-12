@@ -1,11 +1,12 @@
-const NGROK_URL = "{{ NGROK_URL }}";
-const address = 'http://localhost:5000/generate';
+//const base_address = 'https://nonanachronistic-barabara-rheostatic.ngrok-free.dev';
+//const base_address = 'http://localhost:5000';
 const clearBtn = document.getElementById("clearBtn");
 const inputBar = document.getElementById("InputUrl");
 const generatorBtn = document.getElementById("gnrBtn");
 const resultBox = document.getElementById("resultBox");
 const shareBtn = document.getElementById("shareBtn");
 const result = document.getElementById("result");
+const randomizeBtn = document.getElementById("randomizeBtn");
 
 async function processUrl(){
     const inputUrl = document.getElementById("InputUrl").value.trim();
@@ -15,13 +16,15 @@ async function processUrl(){
 
     // reset previous results
     result.textContent = "";
+    resultBox.style.display = "none";
+
 
     if(!inputUrl){
         showError('Please Enter a URL!')
         return;
     }
     try{
-        const response = await fetch(`${address}`, {
+        const response = await fetch(`/generate`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ url: inputUrl })
@@ -72,14 +75,81 @@ function listenContent(){
     }
 }
 
-function shareContent(){
-    const resultText = result.textContent.trim();
+shareBtn.addEventListener('click', function(){
+    const content = result.value.trim();
+    if(!content){
+        alert("No content!")
+        return;
+    }
+
+    const url = encodeURIComponent(window.location.href);
+    const contentEncoded = encodeURIComponent(content);
+    const shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}&summary=${contentEncoded}`;
+
+    window.open(shareUrl, '_blank');
+});
+    
+
+/* async function shareContent(){
+//    const resultText = result.textContent.trim();
+    const resultText = result.value.trim();
     if(!resultText){
         alert("No content!")
         return;
     }
 
-    const shareUrl = `https://${window.NGROK_URL}/share?text=${encodeURIComponent(resultText)}`;
-    const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
-    window.open(linkedInUrl, "_blank", "width=600,height=400");
+    try{
+        const response = await fetch(`/share_post`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ content: resultText })
+        });
+        const data = await response.json();
+
+        if(response.ok){
+            alert(`PostIn successfull!`);
+        } else {
+            if(response.status === 401){
+                alert('Authentication required. Redirecting to LinkedIn login...');
+                window.location.href = '/login/linkedin';
+            } else {
+                alert(`Failed to share post: ${data.message}`);
+//                console.log(${data.message});
+            }
+        }
+    } catch(error) {
+        console.error('Some error occurred during posting');
+    }
+} */
+
+async function generateRandom(){
+
+    randomizeBtn.disabled = true;
+    randomizeBtn.innerHTML = `Generating... <span class="spinner-border text-primary spinner-border-sm" role="status" aria-hidden="true"></span>`;
+
+    // reset previous results
+    result.textContent = "";
+    resultBox.style.display = "none";
+
+    try{
+        const response = await fetch(`/generate_random`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+        });
+
+        if(response.ok === false){
+            throw new Error('Something is wrong with response!')
+        }
+
+        const data = await response.json();
+        result.textContent = data.summary.replace(/<br>/g, '\n');
+    } catch(error){
+        console.error("Error:", error);
+        result.textContent= "Something went wrong!";
+    } finally {
+        randomizeBtn.disabled = false;
+        randomizeBtn.innerHTML = "Trending Now";
+        resultBox.style.display = "block";
+    }
 }
+
