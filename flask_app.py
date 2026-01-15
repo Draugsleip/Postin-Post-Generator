@@ -161,9 +161,8 @@ def process_url():
         content = trafilatura.extract(resp.text)
 
         # langchain agent creation
-        agent = create_agent(model="gpt-5-nano-2025-08-07")
-        # agent = create_agent(model="gpt-4.1-mini")
-
+        agent = create_agent(model="gpt-4.1-mini")
+        # recent models are not compatible with web deployed usage yet
 
         # langchain style interaction
         # noinspection PyTypeChecker
@@ -201,7 +200,7 @@ def generate_random():
     try:
         topic = get_trending_topics()
 
-        agent = create_agent(model="gpt-5-nano-2025-08-07")
+        agent = create_agent(model="gpt-4.1-mini")
 
         # noinspection PyTypeChecker
         agent_response = agent.invoke(
