@@ -19,10 +19,10 @@
     <body>
         <main>
             <div class="container mt-5 text-center">
-                <img src="/static/media/postin_logo.png" alt="postin_logo" width="300">
+                <img src="/static/media/postin_logo.png" alt="postin_logo" width="250">
                 <div class="mb-4 mt-4">
                     <div class="input-group">
-                      <input type="url" class="form-control" id="InputUrl" placeholder="Enter Your URL Here">
+                      <input type="url" class="form-control" id="InputUrl" placeholder="Paste URL Here">
                       <button class="btn btn-outline-danger" type="button" id="clearBtn" style="font-weight: 500;">
                         <i class="bi bi-trash" style="font-size: 1.2rem;"></i>
                       </button>
@@ -32,8 +32,8 @@
                 <button id="gnrBtn" class="btn btn-light mt-2 mb-2 me-4" onclick="processUrl()" type="button" style="font-weight: 500;">Generate Post</button>
                 <button id="randomizeBtn" class="btn btn-light mt-2 mb-2 mw-4" onclick="generateRandom()" type="button" style="font-weight: 500;">Trending Now</button>
 
-                <div id="resultBox" class="mb-4 mt-4" style="display: none;" >
-                    <textarea class="form-control" rows="25" id="result" style="white-space: pre-line; resize: none;"></textarea>
+                <div id="resultBox" class="mb-4 mt-4" style="display: {{ 'block' if pending_post else 'none' }};">
+                    <textarea class="form-control" rows="25" id="result" style="white-space: pre-line; resize: none;">{{ pending_post if pending_post else '' }}</textarea>
                     <button id="shareBtn" onclick="shareContent()" class="btn btn-primary mt-4 me-4" style="font-weight: 500; font-size: 1.1rem;">Post
                         <i class="bi bi-linkedin"></i>
                     </button>
@@ -57,6 +57,6 @@
             integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
             crossorigin="anonymous"
         ></script>
-    <script src="{{ url_for('static', filename='index.js') }}"></script>
+        <script src="{{ url_for('static', filename='index.js') }}"></script>
     </body>
 </html>

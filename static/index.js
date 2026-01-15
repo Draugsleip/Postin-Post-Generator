@@ -1,5 +1,3 @@
-//const base_address = 'https://nonanachronistic-barabara-rheostatic.ngrok-free.dev';
-//const base_address = 'http://localhost:5000';
 const clearBtn = document.getElementById("clearBtn");
 const inputBar = document.getElementById("InputUrl");
 const generatorBtn = document.getElementById("gnrBtn");
@@ -18,11 +16,11 @@ async function processUrl(){
     result.textContent = "";
     resultBox.style.display = "none";
 
-
     if(!inputUrl){
         showError('Please Enter a URL!')
         return;
     }
+    
     try{
         const response = await fetch(`/generate`, {
             method: 'POST',
@@ -75,28 +73,16 @@ function listenContent(){
     }
 }
 
-shareBtn.addEventListener('click', function(){
-    const content = result.value.trim();
-    if(!content){
-        alert("No content!")
-        return;
-    }
-
-    const url = encodeURIComponent(window.location.href);
-    const contentEncoded = encodeURIComponent(content);
-    const shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}&summary=${contentEncoded}`;
-
-    window.open(shareUrl, '_blank');
-});
-    
-
-/* async function shareContent(){
+async function shareContent(){
 //    const resultText = result.textContent.trim();
     const resultText = result.value.trim();
     if(!resultText){
         alert("No content!")
         return;
     }
+
+    shareBtn.disabled = true;
+    shareBtn.innerHTML = `Posting... <span class="spinner-border text-light spinner-border-sm" role="status" aria-hidden="true"></span>`;
 
     try{
         const response = await fetch(`/share_post`, {
@@ -108,19 +94,25 @@ shareBtn.addEventListener('click', function(){
 
         if(response.ok){
             alert(`PostIn successfull!`);
+            result.value = '';
+            resultBox.style.display = 'none';
         } else {
             if(response.status === 401){
-                alert('Authentication required. Redirecting to LinkedIn login...');
+                sessionStorage.setItem('pending_post', resultText);
                 window.location.href = '/login/linkedin';
-            } else {
-                alert(`Failed to share post: ${data.message}`);
-//                console.log(${data.message});
+                return;
             }
-        }
-    } catch(error) {
+            const errMsg = data.message || 'Failed to share post.';
+            alert(errMsg);
+            }
+        }catch(error) {
         console.error('Some error occurred during posting');
+        alert('Failed to share post. Please try again.');
+    } finally {
+        shareBtn.disabled = false;
+        shareBtn.innerHTML = `Post<i class="bi bi-linkedin"></i>`;
     }
-} */
+}
 
 async function generateRandom(){
 
@@ -153,3 +145,17 @@ async function generateRandom(){
     }
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const pendingPost = urlParams.get('pending_post') || sessionStorage.getItem('pending_post');
+
+    if (pendingPost) {
+        result.value = decodeURIComponent(pendingPost);
+        resultBox.style.display = "block";
+
+        sessionStorage.removeItem('pending_post');
+
+        const cleanUrl = window.location.href.split('?')[0];
+        window.history.replaceState({}, document.title, cleanUrl);
+    }
+});
